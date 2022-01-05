@@ -60,7 +60,6 @@ void protothread_init(void)
  *
  * @return  None.
  */
-__attribute__((section(".highcode")))
 void protothread_mainLoop(void)
 {
 	uint8_t r;

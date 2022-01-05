@@ -28,45 +28,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "protothread.h"
-#include <stdio.h>
-#include <stdint.h>
+
+clock_time_t ptTicks = 0;
 
 /*********************************************************************
- * @fn      protothread_init
+ * @fn      protothread_clock_init
  *
- * @brief   初始化ProtoThread，需要在protothread_ports.c中实现心跳时钟
+ * @brief   ProtoThread心跳时钟初始化，如果在外边自行实现了定时器初始化，则该函数可以为空
  *
  * @param   None.
  *
  * @return  None.
  */
-void protothread_init(void)
+void protothread_clock_init(void)
 {
-  protothread_clock_init();
-  process_init();
-  process_start(&etimer_process, NULL);
-  ctimer_init();
+  ptTicks = 0;
+  printf("systick:%d\n",GetSysClock());
+  SysTick_Config(GetSysClock() / PROTOTHREAD_CLOCK_SECONDS);
 }
 
-
 /*********************************************************************
- * @fn      protothread_mainLoop
+ * @fn      protothread_clock_time
  *
- * @brief   ProtoThread主循环，需要在while(1)中，循环调用
+ * @brief   获取心跳时钟的值
  *
  * @param   None.
  *
- * @return  None.
+ * @return  clock_time_t 心跳时钟的值.
  */
 __attribute__((section(".highcode")))
-void protothread_mainLoop(void)
+clock_time_t protothread_clock_time(void)
 {
-	uint8_t r;
-	do {
-		r = process_run();
-	} while(r > 0);
+  return ptTicks;
 }
 
+__attribute__((interrupt("WCH-Interrupt-fast")))
+__attribute__((section(".highcode")))
+void SysTick_Handler(void)
+{
+    ptTicks++;
+    if(etimer_pending() && etimer_next_expiration_time()<= ptTicks)
+    {
+      etimer_request_poll();
+    }
+    SysTick->SR = 0;
+}
 

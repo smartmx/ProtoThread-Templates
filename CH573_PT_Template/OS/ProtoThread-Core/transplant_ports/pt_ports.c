@@ -57,6 +57,7 @@ void protothread_clock_init(void)
  *
  * @return  clock_time_t 心跳时钟的值.
  */
+__attribute__((section(".highcode")))
 clock_time_t protothread_clock_time(void)
 {
   return ptTicks;

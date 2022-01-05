@@ -28,45 +28,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "protothread.h"
-#include <stdio.h>
-#include <stdint.h>
+
+void SysTick_Handler(void)  __attribute__((interrupt("WCH-Interrupt-fast")));
+
+clock_time_t ptTicks = 0;
 
 /*********************************************************************
- * @fn      protothread_init
+ * @fn      protothread_clock_init
  *
- * @brief   初始化ProtoThread，需要在protothread_ports.c中实现心跳时钟
+ * @brief   ProtoThread心跳时钟初始化，如果在外边自行实现了定时器初始化，则该函数可以为空
  *
  * @param   None.
  *
  * @return  None.
  */
-void protothread_init(void)
+void protothread_clock_init(void)
 {
-  protothread_clock_init();
-  process_init();
-  process_start(&etimer_process, NULL);
-  ctimer_init();
+  ptTicks = 0;
+  NVIC_SetPriority(SysTicK_IRQn,0xff);
+  NVIC_EnableIRQ(SysTicK_IRQn);
+  SysTick->CTLR= 0;
+  SysTick->SR  = 0;
+  SysTick->CNT = 0;
+  SysTick->CMP = SystemCoreClock / PROTOTHREAD_CLOCK_SECONDS;
+  SysTick->CTLR= 0xf;
+}
+
+/*********************************************************************
+ * @fn      protothread_clock_time
+ *
+ * @brief   获取心跳时钟的值
+ *
+ * @param   None.
+ *
+ * @return  clock_time_t 心跳时钟的值.
+ */
+clock_time_t protothread_clock_time(void)
+{
+  return ptTicks;
 }
 
 
 /*********************************************************************
- * @fn      protothread_mainLoop
+ * @fn      SysTick_Handler
  *
- * @brief   ProtoThread主循环，需要在while(1)中，循环调用
+ * @brief   SysTick中断函数
  *
  * @param   None.
  *
  * @return  None.
  */
-__attribute__((section(".highcode")))
-void protothread_mainLoop(void)
+void SysTick_Handler(void)
 {
-	uint8_t r;
-	do {
-		r = process_run();
-	} while(r > 0);
+    ptTicks++;
+    if(etimer_pending() && etimer_next_expiration_time()<= ptTicks)
+    {
+        etimer_request_poll();
+    }
+    SysTick->SR=0;
 }
-
 

@@ -171,7 +171,7 @@ exit_process(struct process *p, struct process *fromprocess)
   process_current = old_current;
 }
 /*---------------------------------------------------------------------------*/
-__attribute__((section(".highcode"))) static void
+static void
 call_process(struct process *p, process_event_t ev, process_data_t data)
 {
   int ret;
@@ -221,7 +221,7 @@ process_init(void)
  * Call each process' poll handler.
  */
 /*---------------------------------------------------------------------------*/
-__attribute__((section(".highcode"))) static void
+static void
 do_poll(void)
 {
   struct process *p;
@@ -242,7 +242,7 @@ do_poll(void)
  * listening processes.
  */
 /*---------------------------------------------------------------------------*/
-__attribute__((section(".highcode"))) static void
+static void
 do_event(void)
 {
   process_event_t ev;
@@ -298,7 +298,7 @@ do_event(void)
   }
 }
 /*---------------------------------------------------------------------------*/
-__attribute__((section(".highcode"))) int
+int
 process_run(void)
 {
   /* Process poll events. */

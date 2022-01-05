@@ -28,45 +28,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef _PT_PORTS_H_
+#define _PT_PORTS_H_
 
-#include "protothread.h"
-#include <stdio.h>
-#include <stdint.h>
+#include "ch32v30x.h"
+#include "stdio.h"
 
-/*********************************************************************
- * @fn      protothread_init
- *
- * @brief   初始化ProtoThread，需要在protothread_ports.c中实现心跳时钟
- *
- * @param   None.
- *
- * @return  None.
- */
-void protothread_init(void)
-{
-  protothread_clock_init();
-  process_init();
-  process_start(&etimer_process, NULL);
-  ctimer_init();
-}
+typedef unsigned long                   clock_time_t; //定义时钟变量类型
 
+#define PROCESS_CONF_NO_PROCESS_NAMES   1 //是否不存储process的名字，一般情况下没有必要存储，所以为1即可。
 
-/*********************************************************************
- * @fn      protothread_mainLoop
- *
- * @brief   ProtoThread主循环，需要在while(1)中，循环调用
- *
- * @param   None.
- *
- * @return  None.
- */
-__attribute__((section(".highcode")))
-void protothread_mainLoop(void)
-{
-	uint8_t r;
-	do {
-		r = process_run();
-	} while(r > 0);
-}
+#define RINGBUF_INTERRUPT_SAFE_TYPE     uint16_t  //必须是系统中断安全的位数，决定了ringbuf的最大容量
+
+#define PROTOTHREAD_CLOCK_SECONDS       1000  //根据提供的心跳时钟决定，比如1ms一次中断驱动，则该值为 1s / 1ms = 1000
+
+extern void protothread_clock_init(void);
+
+extern clock_time_t protothread_clock_time(void);
+
+#endif
 
 

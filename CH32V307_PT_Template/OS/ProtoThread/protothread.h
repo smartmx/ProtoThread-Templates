@@ -28,45 +28,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef _PROTOTHREAD_H_
+#define _PROTOTHREAD_H_
 
-#include "protothread.h"
-#include <stdio.h>
-#include <stdint.h>
+#include "transplant_ports/pt_ports.h"
 
-/*********************************************************************
- * @fn      protothread_init
- *
- * @brief   初始化ProtoThread，需要在protothread_ports.c中实现心跳时钟
- *
- * @param   None.
- *
- * @return  None.
- */
-void protothread_init(void)
-{
-  protothread_clock_init();
-  process_init();
-  process_start(&etimer_process, NULL);
-  ctimer_init();
-}
+#include "sys/process.h"
+#include "sys/timer.h"
+#include "sys/ctimer.h"
+#include "sys/etimer.h"
+#include "sys/pt.h"
 
+extern void protothread_init(void);
+extern void protothread_mainLoop(void);
 
-/*********************************************************************
- * @fn      protothread_mainLoop
- *
- * @brief   ProtoThread主循环，需要在while(1)中，循环调用
- *
- * @param   None.
- *
- * @return  None.
- */
-__attribute__((section(".highcode")))
-void protothread_mainLoop(void)
-{
-	uint8_t r;
-	do {
-		r = process_run();
-	} while(r > 0);
-}
-
-
+#endif /* PROTOTHREAD_H_ */
