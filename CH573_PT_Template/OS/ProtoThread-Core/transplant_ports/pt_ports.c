@@ -45,7 +45,7 @@ void protothread_clock_init(void)
 {
   ptTicks = 0;
   printf("systick:%d\n",GetSysClock());
-  SysTick_Config(GetSysClock() / 1000);
+  SysTick_Config(GetSysClock() / PROTOTHREAD_CLOCK_SECONDS);
 }
 
 /*********************************************************************
