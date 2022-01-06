@@ -5,6 +5,7 @@
 
 PROCESS_NAME(app_process);
 PROCESS_NAME(app_process2);
-PROCESS_NAME(app_process2);
+PROCESS_NAME(app_process3);
+
 #endif /* _APP_PROCESS_H_ */
 
