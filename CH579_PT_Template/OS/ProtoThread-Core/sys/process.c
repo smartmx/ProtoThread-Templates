@@ -68,10 +68,6 @@ struct event_data {
 static process_num_events_t nevents, fevent;
 static struct event_data events[PROCESS_CONF_NUMEVENTS];
 
-#if PROCESS_CONF_STATS
-process_num_events_t process_maxevents;
-#endif
-
 static volatile unsigned char poll_requested;
 
 #define PROCESS_STATE_NONE        0
@@ -210,9 +206,6 @@ process_init(void)
   lastevent = PROCESS_EVENT_MAX;
 
   nevents = fevent = 0;
-#if PROCESS_CONF_STATS
-  process_maxevents = 0;
-#endif /* PROCESS_CONF_STATS */
 
   process_current = process_list = NULL;
 }
@@ -348,12 +341,6 @@ process_post(struct process *p, process_event_t ev, process_data_t data)
   events[snum].data = data;
   events[snum].p = p;
   ++nevents;
-
-#if PROCESS_CONF_STATS
-  if(nevents > process_maxevents) {
-    process_maxevents = nevents;
-  }
-#endif /* PROCESS_CONF_STATS */
 
   return PROCESS_ERR_OK;
 }

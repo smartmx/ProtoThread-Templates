@@ -141,7 +141,7 @@ again:
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
-void
+__attribute__((section(".highcode"))) void
 etimer_request_poll(void)
 {
   process_poll(&etimer_process);
@@ -227,13 +227,13 @@ etimer_start_time(struct etimer *et)
   return et->timer.start;
 }
 /*---------------------------------------------------------------------------*/
-int
+__attribute__((section(".highcode"))) int
 etimer_pending(void)
 {
   return timerlist != NULL;
 }
 /*---------------------------------------------------------------------------*/
-clock_time_t
+__attribute__((section(".highcode"))) clock_time_t
 etimer_next_expiration_time(void)
 {
   return etimer_pending() ? next_expiration : 0;
