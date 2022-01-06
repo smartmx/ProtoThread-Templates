@@ -120,7 +120,7 @@ process_start(struct process *p, process_data_t data)
   process_post_synch(p, PROCESS_EVENT_INIT, data);
 }
 /*---------------------------------------------------------------------------*/
-static void
+__HIGH_CODE static void
 exit_process(struct process *p, struct process *fromprocess)
 {
   register struct process *q;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, mx1117 - smartmx@qq.com
  * Copyright (c) 2005, Swedish Institute of Computer Science
  * All rights reserved.
  *
@@ -55,6 +56,7 @@
 
 #include "sys/pt.h"
 #include "sys/cc.h"
+#include "sys/pt-sem.h"
 
 typedef unsigned char process_event_t;
 typedef void *        process_data_t;
@@ -97,7 +99,7 @@ typedef unsigned char process_num_events_t;
 #define PROCESS_EVENT_MSG             0x86
 #define PROCESS_EVENT_EXITED          0x87
 #define PROCESS_EVENT_TIMER           0x88
-#define PROCESS_EVENT_COM             0x89
+#define PROCESS_EVENT_SEM             0x89
 #define PROCESS_EVENT_MAX             0x8a
 
 #define PROCESS_BROADCAST NULL
@@ -518,6 +520,61 @@ int process_is_running(struct process *p);
  * processed.
  */
 int process_nevents(void);
+
+/**
+ * \name Process Semaphore declaration and definition
+ * @{
+ */
+typedef struct pt_sem process_sem_t;
+
+#define PROCESS_SEM_COUNT(s)    PT_SEM_COUNT(s)
+
+/**
+ * Initialize a semaphore
+ *
+ * This macro initializes a semaphore with a value for the
+ * counter. Internally, the semaphores use an "unsigned int" to
+ * represent the counter, and therefore the "count" argument should be
+ * within range of an unsigned int.
+ *
+ * \param s (struct pt_sem *) A pointer to the process_sem_t
+ * representing the semaphore
+ *
+ * \param c (unsigned int) The initial count of the semaphore.
+ * \hideinitializer
+ */
+#define PROCESS_SEM_INIT(s, c)  PT_SEM_INIT(s, c)
+
+/**
+ * Wait for a semaphore
+ *
+ * This macro carries out the "wait" operation on the semaphore. The
+ * wait operation causes the protothread to block while the counter is
+ * zero. When the counter reaches a value larger than zero, the
+ * protothread will continue.
+ *
+ * \param s (process_sem_t *) A pointer to the pt_sem struct
+ * representing the semaphore
+ *
+ * \hideinitializer
+ */
+#define PROCESS_SEM_WAIT(s)  PT_SEM_WAIT(process_pt, s)
+
+/**
+ * Signal a semaphore
+ *
+ * This macro carries out the "signal" operation on the semaphore. The
+ * signal operation increments the counter inside the semaphore, which
+ * eventually will cause waiting protothreads to continue executing.
+ *
+ * \param s (process_sem_t *) A pointer to the process_sem_t
+ * representing the semaphore
+ *
+ * \hideinitializer
+ */
+#define PROCESS_SEM_SIGNAL(pt, s)  PT_SEM_SIGNAL(pt, s);\
+                                   process_post(pt, PROCESS_EVENT_SEM, s)
+
 
 /** @} */
 

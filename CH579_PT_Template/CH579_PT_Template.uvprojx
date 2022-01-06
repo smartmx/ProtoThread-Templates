@@ -648,6 +648,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\APP\app_process.c</FilePath>
             </File>
+            <File>
+              <FileName>pt-sem-example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\APP\pt-sem-example.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

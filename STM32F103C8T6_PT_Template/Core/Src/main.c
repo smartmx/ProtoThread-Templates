@@ -24,6 +24,7 @@
 #include "stdio.h"
 #include "protothread.h"
 #include "app_process.h"
+#include "pt-sem-example.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,7 +109,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	printf("protothread test\n");
 	protothread_init();
-	process_start(&app_process, NULL);
+//    process_start(&app_process, NULL);
+//    process_start(&app_process2, NULL);
+//    process_start(&app_process3, NULL);
+    pt_sem_test();
   while (1)
   {
 		protothread_mainLoop();

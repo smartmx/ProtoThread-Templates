@@ -8,43 +8,8 @@
 #include "debug.h"
 #include "protothread.h"
 #include "main.h"
-
-PROCESS(app_process,"app_process");
-
-PROCESS_THREAD (app_process, ev, data)
-{
-    static struct etimer et;
-    PROCESS_BEGIN();
-    etimer_set(&et,PROTOTHREAD_CLOCK_SECONDS * 1);
-    printf("app_process begin\n");
-    while(1){
-        PROCESS_WAIT_EVENT();
-        if(ev == PROCESS_EVENT_TIMER){
-            printf ("app_process etimer\r\n");
-            etimer_reset(&et);
-        }
-    }
-    PROCESS_END();
-}
-
-PROCESS(app_process2,"app_process2");
-
-PROCESS_THREAD (app_process2, ev, data)
-{
-    static struct etimer et;
-    PROCESS_BEGIN();
-    etimer_set(&et,PROTOTHREAD_CLOCK_SECONDS * 2 / 3 );
-    printf("app_process2 begin\n");
-    while(1){
-        PROCESS_WAIT_EVENT();
-        if(ev == PROCESS_EVENT_TIMER){
-            printf ("app_process2 etimer\r\n");
-            etimer_reset(&et);
-        }
-    }
-    PROCESS_END();
-}
-
+#include "app_process.h"
+#include "pt-sem-example.h"
 /*********************************************************************
  * @fn      main
  *
@@ -57,9 +22,11 @@ int main(void)
 	Delay_Init();
 	USART_Printf_Init(115200);
     protothread_init();
-    process_start(&app_process, NULL);
-    process_start(&app_process2, NULL);
-    printf("Enter main loop.\n");
+
+//    process_start(&app_process, NULL);
+//    process_start(&app_process2, NULL);
+//    process_start(&app_process3, NULL);
+    pt_sem_test(); //信号量测试初始化
 	while(1)
 	{
 	    protothread_mainLoop();

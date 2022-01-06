@@ -15,7 +15,7 @@
 #include "peripheral.h"
 #include "protothread.h"
 #include "app_process.h"
-
+#include "pt-sem-example.h"
 /*********************************************************************
  * GLOBAL TYPEDEFS
  */
@@ -49,7 +49,10 @@ int main( void )
 	GAPRole_PeripheralInit( );
 	Peripheral_Init( ); 
 	protothread_init();
-	process_start(&app_process, NULL);
+//    process_start(&app_process, NULL);
+//    process_start(&app_process2, NULL);
+//    process_start(&app_process3, NULL);
+    pt_sem_test(); //信号量测试初始化
 	while(1){
 		TMOS_SystemProcess( );
 		protothread_mainLoop();
