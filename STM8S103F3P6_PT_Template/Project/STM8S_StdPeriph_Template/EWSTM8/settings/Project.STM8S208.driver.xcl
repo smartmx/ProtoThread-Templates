@@ -1,0 +1,15 @@
+"-p" 
+
+"D:\Program Files\IAR_STM8\stm8\config\ddf\iostm8s208mb.ddf" 
+
+"-d" 
+
+"stlink" 
+
+"--mcuname" 
+
+"STM8S208MB" 
+
+
+
+
