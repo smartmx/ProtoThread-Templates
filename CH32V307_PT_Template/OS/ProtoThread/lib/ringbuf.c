@@ -73,7 +73,7 @@ ringbuf_put(struct ringbuf *r, uint8_t c)
    * better safe than sorry.
    */
   CC_ACCESS_NOW(uint8_t, r->data[r->put_ptr]) = c;
-  CC_ACCESS_NOW(uint8_t, r->put_ptr) = (r->put_ptr + 1) & r->mask;
+  CC_ACCESS_NOW(RINGBUF_INTERRUPT_SAFE_TYPE, r->put_ptr) = (r->put_ptr + 1) & r->mask;
   return 1;
 }
 /*---------------------------------------------------------------------------*/
@@ -103,7 +103,7 @@ ringbuf_get(struct ringbuf *r)
      * (on some architectures).
      */
     c = CC_ACCESS_NOW(uint8_t, r->data[r->get_ptr]);
-    CC_ACCESS_NOW(uint8_t, r->get_ptr) = (r->get_ptr + 1) & r->mask;
+    CC_ACCESS_NOW(RINGBUF_INTERRUPT_SAFE_TYPE, r->get_ptr) = (r->get_ptr + 1) & r->mask;
     return c;
   } else {
     return -1;
