@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, mx1117 - smartmx@qq.com
+ * Copyright (c) 2022, smartmx - smartmx@qq.com
  * Copyright (c) 2008, Swedish Institute of Computer Science.
  * All rights reserved.
  *

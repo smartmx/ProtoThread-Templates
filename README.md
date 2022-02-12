@@ -1,6 +1,6 @@
 # ProtoThread-Templates
 
-[ProtoThread-Core](https://github.com/mx1117/ProtoThread-Core)相关移植例程：
+[ProtoThread-Core](https://github.com/smartmx/ProtoThread-Core)相关移植例程：
 
 ## 目前适配列表：
 ### 沁恒：
